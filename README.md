@@ -2,7 +2,13 @@
 
 Baixe a imagem EXT4 de acordo com o modelo: https://firmware-selector.openwrt.org/
 
-dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync
+Inicie o NanoPI SD Card com o OpenWrt, para gravar openwrt no cartão faça:
+Instalando no MicroSD:
+Use o programa USBImager write *_squashfs-sysupgrade.img.gz to microSD
+insert microSD an boot nanopi R3S
+
+Coloque o firmware na pasta /tmp da memória interna do nanopi e execute:
+```dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync````
 
 sync
 
