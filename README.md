@@ -11,8 +11,9 @@ Coloque o firmware na pasta /tmp da memória interna do nanopi e execute:
 ```sh
 dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync
 ````
+```sh
 sync
-
+```
 Este script instala o **PASSWALL** e o **XRAY-CORE** no OpenWrt.
 
 Devido ao armazenamento insuficiente, a instalação do Xray-Core é feita na memória temporária do roteador, ou seja, ao reiniciar é necessário inserir novamente o arquivo xray na pasta /tmp.
