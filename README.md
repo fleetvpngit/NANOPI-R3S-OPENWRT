@@ -46,9 +46,13 @@ opkg install block-mount blkid fdisk
 fdisk /dev/mmcblk0
 ```
 Digite p para listar as partições.
+
 Digite n para nova partição. Escolha o número 3.
+
 Início: use o próximo bloco disponível (ex: se a partição 2 termina em 344063, inicie com 344064).
+
 Fim: pressione Enter para usar o espaço restante.
+
 Salve com w.
 
 3. Formate a partição:
