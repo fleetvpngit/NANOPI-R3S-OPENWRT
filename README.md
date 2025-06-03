@@ -88,3 +88,23 @@ uci commit fstab
 umount /mnt/newroot
 reboot
 ```
+
+7. Após iniciar, acesse o terminal e insira:
+```sh
+mount | grep overlay
+```
+
+
+✅ Verificar se o overlay foi aplicado com sucesso
+Pelo terminal:
+```sh
+df -h
+```
+
+Você deve ver /overlay usando a nova partição /dev/mmcblk0p3.
+
+Pelo Luci (interface web do OpenWRT):
+
+Acesse: System → Software
+
+Na tela inicial, confira o espaço disponível em Disk Space.
