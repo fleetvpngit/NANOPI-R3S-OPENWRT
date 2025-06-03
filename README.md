@@ -2,7 +2,8 @@
 
 Baixe a imagem EXT4 de acordo com o modelo: https://firmware-selector.openwrt.org/
 
-Inicie o NanoPI SD Card com o OpenWrt, para gravar openwrt no cartão faça:
+Inicie o OpenWRT pel Cartão SD.
+
 Instalando no MicroSD:
 Use o programa USBImager write *_squashfs-sysupgrade.img.gz to microSD
 insert microSD an boot nanopi R3S
