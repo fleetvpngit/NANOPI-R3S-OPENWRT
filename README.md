@@ -1,4 +1,4 @@
-# Instalação do OPENWRT
+## Instalação do OPENWRT:
 
 Baixe a imagem EXT4 de acordo com o modelo: https://firmware-selector.openwrt.org/
 
