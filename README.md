@@ -1,93 +1,86 @@
-## Instalação do OPENWRT:
-
-Baixe a imagem EXT4 de acordo com o modelo: https://firmware-selector.openwrt.org/
-
-Instalando no MicroSD:
-Use o programa USBImager para gravar a imagem no cartão SD.
-
-Inicie o OpenWRT pelo Cartão SD.
-
-Instalando na memória eMCC:
-Coloque o firmware na pasta /tmp da memória interna do nanopi e execute:
-```sh
-dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync
-````
-```sh
-sync
-```
-
-Após isso, desligue, remova o cartão sd e inicie o nanopi.
+# Instalação do OpenWRT no NanoPi R3S
 
 ---
 
-## Montar partição Overlay
+## 📦 Instalação do OpenWRT no NanoPi R3S
 
-Por padrão o OpenWRT irá utilizar apenas os 98 Mib de armazenamento e o restante nao será particionado.
+### 🔻 1. Baixe a imagem EXT4
 
-Para fazer com o que o OpenWRT reconheça todos os 32 gb eMCC será necessário criar uma partição overlay:
+Acesse o [OpenWRT Firmware Selector](https://firmware-selector.openwrt.org/) e baixe a imagem `.ext4` compatível com o seu dispositivo.
 
-Conecte o NanoPi a internet e faça:
+---
+
+### 💾 2. Gravar imagem no microSD
+
+Use o programa [USBImager](https://gitlab.com/bztsrc/usbimager) (ou similar) para gravar a imagem `.img` no cartão microSD.
+
+- Insira o cartão no dispositivo.
+- Inicie o NanoPi R3S com o microSD conectado.
+
+---
+
+### 📥 3. Instalar na memória interna (eMMC)
+
+Após inicializar com o cartão, copie o firmware para a pasta `/tmp` da memória interna via SCP ou outro método. Em seguida, execute os comandos:
+
+```sh
+dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync
+sync
+```
+⚠️ Atenção: certifique-se de que /dev/mmcblk0 aponta para a eMMC interna. Use lsblk ou fdisk -l para confirmar.
+
+Depois disso, desligue o dispositivo, remova o cartão SD e ligue novamente. O sistema será iniciado pela eMMC.
+
+### Expandir armazenamento com partição overlay
+Por padrão, o OpenWRT usa apenas ~98 MiB do eMMC, o restante permanece não particionado. Para utilizar todo o espaço (ex: 32 GB), siga os passos abaixo para criar e configurar uma partição overlay.
+
+1. Instale os utilitários necessários:
+Conecte o NanoPi à internet e execute:
 ```sh
 opkg update
-```
-```sh
 opkg install block-mount blkid fdisk
 ```
+
+2. Crie uma nova partição:
 ```sh
 fdisk /dev/mmcblk0
 ```
-Aqui você irá digitar 'p' para ver as partições.
-Digite 'n' para criar uma partição nova, com o valor '3'.
-O início do bloco deverá ser seguido da partição 2, por exemplo, se a partição 2 está terminando com 344063, a partição 3 deve iniciar com 344064.
-O final pode dexar vazio que irá pegar todo espaço disponível.
+Digite p para listar as partições.
+Digite n para nova partição. Escolha o número 3.
+Início: use o próximo bloco disponível (ex: se a partição 2 termina em 344063, inicie com 344064).
+Fim: pressione Enter para usar o espaço restante.
+Salve com w.
+
+3. Formate a partição:
 ```sh
 mkfs.ext4 /dev/mmcblk0p3
 ```
-Esse comando irá formatar a partição.
 
-Agora pode seguir com os passos:
+4. Copie os dados da overlay atual:
 ```sh
 mkdir /mnt/newroot
-```
-```sh
 mount /dev/mmcblk0p3 /mnt/newroot
-```
-```sh
 mount | grep overlay
-```
-```sh
 tar -C /overlay -cvf - . | tar -C /mnt/newroot -xf -
 ```
+
+5. Configure o fstab com a UUID:
 ```sh
 block info /dev/mmcblk0p3 | grep UUID
 ```
-Copie a UUID e insira no código abaixo:
+Copie a UUID obtida e insira nos comandos abaixo:
+
 ```sh
 uci -q delete fstab.extroot
 uci set fstab.extroot="mount"
-uci set fstab.extroot.uuid="COLOCAR UUID"
+uci set fstab.extroot.uuid="COLOQUE-A-UUID-AQUI"
 uci set fstab.extroot.target="/overlay"
 uci set fstab.extroot.enabled="1"
 uci commit fstab
 ```
+
+6. Finalize e reinicie:
 ```sh
 umount /mnt/newroot
-```
-```sh
 reboot
 ```
-```sh
-mount | grep overlay
-```
-
-
-## Verificando se o procedimento foi efetuado com sucesso:
-
-Pelo terminal faça:
-```sh
-df -h
-```
-Deverá aparecer a partição que você criou como /overlay.
-
-Verifique no painel luci do OpenWRT - System - Software.
-Verifique em Disk Space na tela inicial do OpenWRT.
