@@ -15,19 +15,43 @@ dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade
 ```sh
 sync
 ```
-Este script instala o **PASSWALL** e o **XRAY-CORE** no OpenWrt.
 
-Devido ao armazenamento insuficiente, a instalação do Xray-Core é feita na memória temporária do roteador, ou seja, ao reiniciar é necessário inserir novamente o arquivo xray na pasta /tmp.
+Após isso, desligue, remova o cartão sd e inicie o nanopi.
 
 ---
 
-## Detalhes do ambiente compatível
+## Montar partição Overlay
 
-- **Versão do OpenWrt:** 22.03.05  
-- **Modelo do roteador:** Xiaomi MI 4 A Gigabit  
-- **Espaço de armazenamento necessário:** 8 MB+  
-- **Memória RAM necessária:** 128 MB+
+Por padrão o OpenWRT irá utilizar apenas os 98 Mib de armazenamento e o restante nao será particionado.
 
+Para fazer com o que o OpenWRT reconheça todos os 32 gb eMCC será necessário criar uma partição overlay:
+
+Conecte o NanoPi a internet e faça:
+```sh
+opkg update
+```
+```sh
+opkg install block-mount blkid fdisk
+```
+```sh
+fdisk /dev/mmcblk0
+```
+Aqui você irá digitar 'p' para ver as partições.
+Digite 'n' para criar uma partição nova, com o valor '3'.
+O início do bloco deverá ser seguido da partição 2, por exemplo, se a partição 2 está terminando com 344063, a partição 3 deve iniciar com 344064.
+O final pode dexar vazio que irá pegar todo espaço disponível.
+```sh
+mkfs.ext4 /dev/mmcblk0p3
+```
+Esse comando irá formatar a partição.
+
+Agora pode seguir com os passos:
+```sh
+mkdir /mnt/newroot
+```
+```sh
+mount /dev/mmcblk0p3 /mnt/newroot
+```
 ---
 
 ## Comando para instalação
