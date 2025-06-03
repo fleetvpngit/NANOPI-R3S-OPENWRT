@@ -2,12 +2,12 @@
 
 Baixe a imagem EXT4 de acordo com o modelo: https://firmware-selector.openwrt.org/
 
-Inicie o OpenWRT pel Cartão SD.
-
 Instalando no MicroSD:
-Use o programa USBImager write *_squashfs-sysupgrade.img.gz to microSD
-insert microSD an boot nanopi R3S
+Use o programa USBImager para gravar a imagem no cartão SD.
 
+Inicie o OpenWRT pelo Cartão SD.
+
+Instalando na memória eMCC:
 Coloque o firmware na pasta /tmp da memória interna do nanopi e execute:
 ```sh
 dd if=/tmp/openwrt-24.10.1-rockchip-armv8-friendlyarm_nanopi-r3s-ext4-sysupgrade.img of=/dev/mmcblk0 bs=4M conv=fsync
@@ -52,11 +52,42 @@ mkdir /mnt/newroot
 ```sh
 mount /dev/mmcblk0p3 /mnt/newroot
 ```
----
-
-## Comando para instalação
-
-Execute o comando abaixo no terminal do seu roteador para baixar e instalar o script:
-
 ```sh
-cd / && wget -O passwall-install.sh https://raw.githubusercontent.com/fleetvpngit/PASSWALL/refs/heads/main/passwall-install.sh && chmod +x passwall-install.sh && sh passwall-install.sh
+mount | grep overlay
+```
+```sh
+tar -C /overlay -cvf - . | tar -C /mnt/newroot -xf -
+```
+```sh
+block info /dev/mmcblk0p3 | grep UUID
+```
+Copie a UUID e insira no código abaixo:
+```sh
+uci -q delete fstab.extroot
+uci set fstab.extroot="mount"
+uci set fstab.extroot.uuid="COLOCAR UUID"
+uci set fstab.extroot.target="/overlay"
+uci set fstab.extroot.enabled="1"
+uci commit fstab
+```
+```sh
+umount /mnt/newroot
+```
+```sh
+reboot
+```
+```sh
+mount | grep overlay
+```
+
+
+## Verificando se o procedimento foi efetuado com sucesso:
+
+Pelo terminal faça:
+```sh
+df -h
+```
+Deverá aparecer a partição que você criou como /overlay.
+
+Verifique no painel luci do OpenWRT - System - Software.
+Verifique em Disk Space na tela inicial do OpenWRT.
