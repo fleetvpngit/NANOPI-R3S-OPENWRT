@@ -31,7 +31,7 @@ sync
 
 Depois disso, desligue o dispositivo, remova o cartão SD e ligue novamente. O sistema será iniciado pela eMMC.
 
-### Expandir armazenamento com partição overlay
+### 🔻 4. Expandir armazenamento com partição overlay
 Por padrão, o OpenWRT usa apenas ~98 MiB do eMMC, o restante permanece não particionado. Para utilizar todo o espaço (ex: 32 GB), siga os passos abaixo para criar e configurar uma partição overlay.
 
 1. Instale os utilitários necessários:
@@ -109,7 +109,7 @@ Acesse: System → Software
 
 Na tela inicial, confira o espaço disponível em Disk Space.
 
-### Ajustar hora automaticamente ao ligar com RTC (com bateria conectada)
+### 🔻 5. Ajustar hora automaticamente ao ligar com RTC (com bateria conectada)
 O NanoPi R3S possui conector RTC, caso você possua a bateria conectada, o horário e data ficará sempre atualizado.
 
 Para configurar faça isso:
