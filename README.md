@@ -108,3 +108,27 @@ Pelo Luci (interface web do OpenWRT):
 Acesse: System → Software
 
 Na tela inicial, confira o espaço disponível em Disk Space.
+
+### Ajustar hora automaticamente ao ligar com RTC (com bateria conectada)
+O NanoPi R3S possui conector RTC, caso você possua a bateria conectada, o horário e data ficará sempre atualizado.
+
+Para configurar faça isso:
+
+Com a data/hora do sistema correta, você irá gravar a data/hora do rtc1 (bateria):
+```sh
+hwclock -w -f /dev/rtc1 --localtime
+```
+
+Após isso, seu rtc já está com data/hora correta. Próximo passo é sincronizar com o sistema quando desligar e ligar:
+
+Você pode fazer manualmente com o comando:
+```sh
+hwclock -r -f /dev/rtc1 --localtime
+```
+Ou automaticamente:
+Vá em OpenWRT - System - Startup - Local Startup
+
+Adicione o comando antes do exit 0:
+```sh
+hwclock -r -f /dev/rtc1 --localtime
+```
